@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizzeria Peppone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+    /* Colours */
+    --color-bg: #FAF8F5;
+    --color-surface: #FFFFFF;
+    --color-text: #2C2A28;
+    --color-text-muted: #6B655F;
+    --color-accent: #B83B22;
+    --color-accent-light: #d64a2d;
+    --color-footer: #2A4D2E;
+    
+    /* Typography */
+    --font-heading: 'Fraunces', serif;
+    --font-body: 'DM Sans', sans-serif;
+    
+    /* Type Scale */
+    --text-xs: clamp(0.75rem, 1.5vw, 0.875rem);
+    --text-sm: clamp(0.875rem, 1.8vw, 1rem);
+    --text-base: clamp(1rem, 2vw, 1.125rem);
+    --text-lg: clamp(1.125rem, 2.5vw, 1.375rem);
+    --text-xl: clamp(1.375rem, 3vw, 1.75rem);
+    --text-2xl: clamp(1.75rem, 4vw, 2.5rem);
+    --text-3xl: clamp(2.25rem, 5vw, 3.5rem);
+    --text-4xl: clamp(3rem, 7vw, 4.5rem);
+    
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-24: 6rem;
+    
+    /* Z-index stack */
+    --z-base: 0;
+    --z-raised: 10;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-overlay: 500;
+    --z-modal: 1000;
+    --z-toast: 2000;
+    --z-max: 9000;
+}
+
+/* Reset & Base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 100%; }
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.1;
+    color: var(--color-text);
+    font-weight: 600;
+}
+h1 { font-size: var(--text-4xl); letter-spacing: -0.02em; }
+h2 { font-size: var(--text-3xl); letter-spacing: -0.01em; }
+h3 { font-size: var(--text-2xl); }
+p { font-size: var(--text-base); margin-bottom: var(--space-4); }
+a { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* Utilities */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+.section { padding: clamp(4rem, 10vw, 8rem) 0; }
+.text-center { text-align: center; }
+
+/* Icons */
+[data-lucide] {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+    line-height: 1;
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.5;
+}
+.icon-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 500;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: var(--z-raised);
+    text-decoration: none;
+}
+.btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-surface);
+}
+.btn-primary:hover {
+    background-color: var(--color-accent-light);
+    transform: translateY(-2px);
+}
+.btn-secondary {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-text);
+}
+.btn-secondary:hover {
+    background-color: var(--color-text);
+    color: var(--color-surface);
+}
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-accent);
+    color: white;
+    padding: 8px;
+    z-index: var(--z-max);
+    transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* Header & Navigation */
+.site-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1001;
+    padding: 1.25rem 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+    background-color: transparent;
+}
+.site-header.scrolled {
+    background-color: var(--color-surface);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    padding: 1rem 0;
+}
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo-text {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+}
+
+/* Mobile Navigation */
+.nav-toggle {
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1002;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--color-text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-toggle.is-active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.nav-toggle.is-active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.nav-toggle.is-active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+.mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background-color: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.mobile-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.mobile-nav-list {
+    list-style: none;
+    text-align: center;
+}
+.mobile-nav-list li { padding: 1rem 0; }
+.mobile-nav-list a {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    color: var(--color-text);
+}
+
+/* Desktop Navigation */
+.desktop-nav { display: none; }
+.desktop-nav-list {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+.desktop-nav-list a {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    position: relative;
+}
+.desktop-nav-list a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--color-accent);
+    transition: width 0.3s ease;
+}
+.desktop-nav-list a:hover::after { width: 100%; }
+
+@media (min-width: 769px) {
+    .nav-toggle { display: none !important; pointer-events: none; }
+    .mobile-overlay { display: none !important; }
+    .desktop-nav { display: block; }
+}
+
+/* Hero Section */
+.hero {
+    padding-top: clamp(8rem, 20vh, 12rem);
+    padding-bottom: clamp(4rem, 10vh, 6rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+.hero-content {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.hero-mascot {
+    width: 180px;
+    height: auto;
+    margin-bottom: var(--space-8);
+    animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.hero h1 {
+    font-style: italic;
+    margin-bottom: var(--space-4);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+}
+.hero p {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    max-width: 500px;
+    margin: 0 auto var(--space-8);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+}
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+@keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Menu Grid Section */
+.menu-grid-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+}
+@media (min-width: 640px) {
+    .menu-grid-wrap { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+    .menu-grid-wrap { grid-template-columns: repeat(3, 1fr); }
+}
+
+.menu-card {
+    background: var(--color-surface);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-text);
+}
+.menu-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+.menu-card-img {
+    height: 240px;
+    width: 100%;
+    overflow: hidden;
+}
+.menu-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-card:hover .menu-card-img img {
+    transform: scale(1.05);
+}
+.menu-card-content {
+    padding: var(--space-6);
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.menu-card-title {
+    font-size: var(--text-xl);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+.menu-card:hover .menu-card-title {
+    color: var(--color-accent);
+}
+
+/* Offset Layout Section */
+.offset-section {
+    background-color: var(--color-surface);
+    position: relative;
+}
+.offset-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: center;
+}
+@media (min-width: 768px) {
+    .offset-grid {
+        grid-template-columns: 5fr 7fr;
+        gap: var(--space-16);
+    }
+    .offset-content { padding-right: var(--space-8); }
+    .offset-image {
+        margin-right: calc(var(--space-6) * -1);
+        border-radius: 24px 0 0 24px;
+        overflow: hidden;
+    }
+}
+.offset-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+}
+
+/* Footer */
+.site-footer {
+    background-color: var(--color-footer);
+    color: #e5e7eb;
+    padding: clamp(4rem, 8vw, 7rem) 0 2rem;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    margin-bottom: var(--space-12);
+}
+@media (min-width: 640px) {
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+    .footer-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.footer-col h4 {
+    color: var(--color-surface);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-6);
+    font-family: var(--font-body);
+    font-weight: 500;
+}
+.footer-brand-logo {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-surface);
+    display: block;
+    margin-bottom: var(--space-2);
+}
+.footer-tagline {
+    font-size: var(--text-sm);
+    color: #d1d5db;
+    margin-bottom: var(--space-6);
+}
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+.social-links a {
+    color: var(--color-surface);
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.social-links a:hover { opacity: 1; }
+.footer-contact-list {
+    list-style: none;
+}
+.footer-contact-list li {
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+    color: #d1d5db;
+}
+.footer-contact-list .icon-text {
+    align-items: flex-start;
+}
+.footer-contact-list [data-lucide] {
+    margin-top: 0.2em;
+    width: 16px; height: 16px;
+    opacity: 0.8;
+}
+.hours-list {
+    list-style: none;
+    font-size: var(--text-sm);
+    color: #d1d5db;
+}
+.hours-list li {
+    margin-bottom: var(--space-4);
+    line-height: 1.5;
+}
+.hours-list strong {
+    color: var(--color-surface);
+    display: block;
+    font-weight: 500;
+}
+.hours-list small {
+    color: #9ca3af;
+    font-size: 0.85em;
+}
+.legal-list {
+    list-style: none;
+}
+.legal-list li {
+    margin-bottom: var(--space-3);
+}
+.legal-list button {
+    background: none;
+    border: none;
+    color: #d1d5db;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+    transition: color 0.2s;
+}
+.legal-list button:hover {
+    color: var(--color-surface);
+}
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: var(--space-6);
+    text-align: center;
+    font-size: var(--text-xs);
+    color: #9ca3af;
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-max);
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.modal-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-card {
+    background-color: var(--color-surface);
+    width: 100%;
+    max-width: 480px;
+    border-radius: 16px;
+    padding: var(--space-8);
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--color-text);
+}
+.modal-overlay.is-active .modal-card {
+    transform: translateY(0);
+}
+.modal-close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+.modal-close:hover { color: var(--color-accent); }
+.modal-title {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-4);
+    padding-right: var(--space-8);
+    font-family: var(--font-heading);
+}
+.modal-body {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+.modal-links {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+.modal-links a {
+    color: var(--color-accent);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* Cookie Banner */
+.cookie-banner {
+    position: fixed;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    right: var(--space-4);
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--color-surface);
+    border-radius: 12px;
+    padding: var(--space-6);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    z-index: var(--z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    transform: translateY(150%);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cookie-banner.is-visible {
+    transform: translateY(0);
+}
+.cookie-text {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+.cookie-actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;
+}
+.cookie-actions .btn {
+    padding: 0.5rem 1rem;
+    font-size: var(--text-sm);
+}
+
+/* Scroll Reveal */
+.reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+}
+</style>
+</head>
+<body>
+<!-- DEMO NOTICE BANNER - benedictjaros.com -->
+<style>
+#__demo_spacer{display:block;}
+#__demo_notice,#__demo_notice *{box-sizing:border-box;margin:0;padding:0;}
+#__demo_notice{
+  position:fixed;top:0;left:0;right:0;z-index:99999;
+  background:rgba(9,9,11,.97);
+  backdrop-filter:blur(14px) saturate(160%);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+}
+#__demo_inner{
+  max-width:1280px;margin:0 auto;
+  padding:0 44px 0 18px;min-height:38px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+#__demo_dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:#f5c842;box-shadow:0 0 7px rgba(245,200,66,.55);}
+#__demo_label{color:#f5c842;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;flex-shrink:0;}
+#__demo_divider{color:rgba(255,255,255,.15);font-size:12px;flex-shrink:0;}
+#__demo_text{color:rgba(255,255,255,.45);font-size:11.5px;line-height:1.45;flex:1 1 160px;}
+#__demo_links{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+#__demo_links a{
+  color:rgba(255,255,255,.38);font-size:11px;text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.14);
+  transition:color .15s,border-color .15s;white-space:nowrap;
+}
+#__demo_links a:hover{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.4);}
+#__demo_link_sep{color:rgba(255,255,255,.15);font-size:10px;}
+#__demo_close{
+  position:absolute;right:0;top:0;bottom:0;width:40px;
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,255,255,.28);font-size:16px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:color .15s;
+}
+#__demo_close:hover{color:rgba(255,255,255,.7);}
+@media(max-width:560px){
+  #__demo_inner{padding:7px 44px 7px 14px;gap:6px;}
+  #__demo_text{font-size:11px;flex:1 1 100%;order:3;}
+  #__demo_dot,#__demo_label{order:1;}
+  #__demo_divider{order:2;}
+  #__demo_links{order:4;}
+}
+</style>
+<div id="__demo_spacer"></div>
+<div id="__demo_notice" role="banner" aria-label="Demo notice">
+  <div id="__demo_inner">
+    <span id="__demo_dot"></span>
+    <span id="__demo_label">Demo</span>
+    <span id="__demo_divider">/</span>
+    <span id="__demo_text">Unofficial remake &mdash; not the real website. All content &amp; trademarks belong to their owners.</span>
+    <div id="__demo_links">
+      <a href="https://benedictjaros.com/impressum" target="_blank" rel="noopener noreferrer">Impressum</a>
+      <span id="__demo_link_sep">&middot;</span>
+      <a href="https://benedictjaros.com/datenschutz" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+    </div>
+  </div>
+  <button id="__demo_close" aria-label="Close demo notice">&#x2715;</button>
+</div>
+<script>
+(function () {
+  var spacer = document.getElementById('__demo_spacer');
+  var b = document.getElementById('__demo_notice');
+  var x = document.getElementById('__demo_close');
+  if (!b || !spacer) return;
+  function sync() { spacer.style.height = b.offsetHeight + 'px'; }
+  function hide() {
+    b.style.display = 'none'; spacer.style.height = '0';
+    try { sessionStorage.setItem('__demo_closed', '1'); } catch (e) {}
+  }
+  try { if (sessionStorage.getItem('__demo_closed')) { b.style.display = 'none'; spacer.style.height = '0'; return; } } catch (e) {}
+  sync();
+  window.addEventListener('resize', function () { if (b.style.display !== 'none') sync(); });
+  if (x) x.addEventListener('click', hide);
+}());
+</script>
+
+
+<a href="#main" class="skip-link">Zum Inhalt springen</a>
+
+<header class="site-header" id="header">
+    <div class="container header-inner">
+        <a href="#" class="logo-text">Peppone</a>
+        
+        <nav class="desktop-nav">
+            <ul class="desktop-nav-list">
+                <li><a href="#menu">Speisen</a></li>
+                <li><a href="#about">Über uns</a></li>
+                <li><a href="#footer">Kontakt</a></li>
+            </ul>
+        </nav>
+
+        <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<div class="mobile-overlay" id="mobileOverlay">
+    <nav>
+        <ul class="mobile-nav-list">
+            <li><a href="#menu" class="mobile-link">Speisen</a></li>
+            <li><a href="#about" class="mobile-link">Über uns</a></li>
+            <li><a href="#footer" class="mobile-link">Kontakt</a></li>
+        </ul>
+    </nav>
+</div>
+
+<main id="main">
+    <section class="hero">
+        <div class="container hero-content">
+            <img src="https://www.pizzeria-peppone.at/wp-content/uploads/elementor/thumbs/pizzeria-peppone-logo-farbe-rand-r6wiyq543zdan1wcugfrhb3tc5c18oxle041wt5wcg.webp" alt="Peppone Maskottchen" class="hero-mascot">
+            <h1>Herzlich Willkommen!</h1>
+            <p>Ein Stück Italien im Salzkammergut. Genießen Sie authentische Pizza, hausgemachte Pasta und herzliche Gastfreundschaft.</p>
+            <div class="hero-actions">
+                <a href="#menu" class="btn btn-primary"><span class="icon-text">Speisekarte ansehen <i data-lucide="arrow-right"></i></span></a>
+                <button class="btn btn-secondary trigger-placeholder" data-feature="Tisch reservieren">Tisch reservieren</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="section">
+        <div class="container">
+            <div class="text-center reveal">
+                <h2>Unsere Speisen</h2>
+                <p style="color: var(--color-text-muted); max-width: 600px; margin: 0 auto;">Frisch zubereitet mit besten Zutaten und viel Amore.</p>
+            </div>
+            
+            <div class="menu-grid-wrap">
+                <article class="menu-card reveal" style="--i:0">
+                    <div class="menu-card-img">
+                        <img src="https://www.pizzeria-peppone.at/wp-content/uploads/2025/06/pizzeria-peppone-service-19-300x300.webp" alt="Suppe" loading="lazy">
+                    </div>
+                    <div class="menu-card-content">
+                        <h3 class="menu-card-title">Suppe</h3>
+                    </div>
+                </article>
+                
+                <article class="menu-card reveal" style="--i:1">
+                    <div class="menu-card-img">
+                        <img src="https://www.pizzeria-peppone.at/wp-content/uploads/2025/06/pizzeria-peppone-service-20-300x300.webp" alt="Salat" loading="lazy">
+                    </div>
+                    <div class="menu-card-content">
+                        <h3 class="menu-card-title">Salat</h3>
+                    </div>
+                </article>
+                
+                <article class="menu-card reveal" style="--i:2">
+                    <div class="menu-card-img">
+                        <img src="https://www.pizzeria-peppone.at/wp-content/uploads/2025/06/pizzeria-peppone-service-15-300x300.webp" alt="Pizza" loading="lazy">
+                    </div>
+                    <div class="menu-card-content">
+                        <h3 class="menu-card-title">Pizza</h3>
+                    </div>
+                </article>
+                
+                <article class="menu-card reveal" style="--i:3">
+                    <div class="menu-card-img">
+                        <img src="https://www.pizzeria-peppone.at/wp-content/uploads/2025/06/pizzeria-peppone-service-09-300x300.webp" alt="Pasta" loading="lazy">
+                    </div>
+                    <div class="menu-card-content">
+                        <h3 class="menu-card-title">Pasta</h3>
+                    </div>
+                </article>
+                
+                <article class="menu-card reveal" style="--i:4">
+                    <div class="menu-card-img">
+                        <img src="https://www.pizzeria-peppone.at/wp-content/uploads/2025/06/pizzeria-peppone-service-22-300x300.webp" alt="Eis" loading="lazy">
+                    </div>
+                    <div class="menu-card-content">
+                        <h3 class="menu-card-title">Eis</h3>
+                    </div>
+                </article>
+                
+                <article class="menu-card reveal" style="--i:5">
+                    <div class="menu-card-img">
+                        <img src="https://www.pizzeria-peppone.at/wp-content/uploads/2025/06/pizzeria-peppone-service-12-300x300.webp" alt="Dessert" loading="lazy">
+                    </div>
+                    <div class="menu-card-content">
+                        <h3 class="menu-card-title">Dessert</h3>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section offset-section">
+        <div class="container">
+            <div class="offset-grid">
+                <div class="offset-content reveal">
+                    <h2>Tradition & Geschmack</h2>
+                    <p>Seit vielen Jahren ist die Pizzeria Peppone ein fester Bestandteil der kulinarischen Landschaft in Bad Goisern. Wir legen Wert auf eine entspannte Atmosphäre, in der sich Einheimische und Gäste gleichermaßen wohlfühlen.</p>
+                    <p>Unser Teig ruht lange, unsere Zutaten sind sorgfältig ausgewählt. Das schmeckt man bei jedem Bissen.</p>
+                    <button class="btn btn-secondary trigger-placeholder" data-feature="Online Bestellung" style="margin-top: var(--space-4);">
+                        <span class="icon-text"><i data-lucide="shopping-bag"></i> Essen bestellen</span>
+                    </button>
+                </div>
+                <div class="offset-image reveal" style="--i:1">
+                    <img src="https://www.pizzeria-peppone.at/wp-content/uploads/2025/06/pizzeria-peppone-service-15-300x300.webp" alt="Frische Pizza aus dem Ofen" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer id="footer" class="site-footer">
+    <div class="container footer-grid">
+        <div class="footer-col">
+            <span class="footer-brand-logo">Peppone</span>
+            <p class="footer-tagline">Ein Stück Italien im Salzkammergut. Authentische Pizza & hausgemachte Pasta.</p>
+            <div class="social-links">
+                <button class="btn-text trigger-placeholder" data-feature="Instagram" aria-label="Instagram">
+                    <i data-lucide="instagram"></i>
+                </button>
+                <button class="btn-text trigger-placeholder" data-feature="Facebook" aria-label="Facebook">
+                    <i data-lucide="facebook"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer-col">
+            <h4>Kontakt</h4>
+            <ul class="footer-contact-list">
+                <li>
+                    <span class="icon-text"><i data-lucide="map-pin"></i> 4822 Bad Goisern am Hallstättersee,<br>Obere Marktstraße 12</span>
+                </li>
+                <li>
+                    <span class="icon-text"><i data-lucide="phone"></i> +43 (0)6135 / 7141</span>
+                </li>
+                <li>
+                    <span class="icon-text"><i data-lucide="mail"></i> info@pizzeria-peppone.at</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="footer-col">
+            <h4>Öffnungszeiten</h4>
+            <ul class="hours-list">
+                <li>
+                    <strong>Freitag / Samstag / Montag</strong>
+                    17:00 bis 23:00 Uhr <br><small>(Küche bis 22:00 Uhr)</small>
+                </li>
+                <li>
+                    <strong>Sonntag & Feiertag</strong>
+                    11:00 bis 14:00 Uhr <small>(Küche bis 13:30 Uhr)</small><br>
+                    17:00 bis 23:00 Uhr <small>(Küche bis 22:00 Uhr)</small>
+                </li>
+                <li>
+                    <strong>Di. / Mi. / Do.</strong>
+                    Ruhetag
+                </li>
+            </ul>
+        </div>
+        
+        <div class="footer-col">
+            <h4>Rechtliches</h4>
+            <ul class="legal-list">
+                <li><button class="trigger-demo">Impressum</button></li>
+                <li><button class="trigger-demo">Datenschutzerklärung</button></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <p>© 2026 Werbeagentur Urstöger — All original content, images & trademarks are property of their respective owners. Website rebuilt by Benedict Jaros.</p>
+    </div>
+</footer>
+
+<!-- Placeholder Feature Modal -->
+<div class="modal-overlay" id="placeholderModal" role="dialog" aria-modal="true" aria-labelledby="placeholderTitle">
+    <div class="modal-card">
+        <button class="modal-close" aria-label="Schließen" data-close-modal>
+            <i data-lucide="x"></i>
+        </button>
+        <h3 class="modal-title" id="placeholderTitle">Feature</h3>
+        <div class="modal-body">
+            <p>Dieses Feature wird verfügbar sein, sobald die Website gestartet und konfiguriert ist. Kontaktieren Sie uns in der Zwischenzeit – wir freuen uns, von Ihnen zu hören.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Demo Notice Modal -->
+<div class="modal-overlay" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle">
+    <div class="modal-card">
+        <button class="modal-close" aria-label="Schließen" data-close-modal>
+            <i data-lucide="x"></i>
+        </button>
+        <h3 class="modal-title" id="demoTitle">Rechtliche Hinweise</h3>
+        <div class="modal-body">
+            <p>Diese Website ist ein Demo-Remake und wurde nicht von oder für das Unternehmen erstellt. Die Inhalte dienen ausschließlich Demonstrationszwecken. Für unsere eigenen rechtlichen Informationen:</p>
+            <div class="modal-links">
+                <a href="https://benedictjaros.com/impressum" target="_blank">Impressum</a>
+                <a href="https://benedictjaros.com/datenschutz" target="_blank">Datenschutz</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Banner -->
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Cookie Banner">
+    <p class="cookie-text">Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Durch die weitere Nutzung stimmen Sie der Verwendung zu.</p>
+    <div class="cookie-actions">
+        <button class="btn btn-secondary" id="cookieDecline">Ablehnen</button>
+        <button class="btn btn-primary" id="cookieAccept">Akzeptieren</button>
+    </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Icons
+    lucide.createIcons();
+
+    // Sticky Header
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    }, { passive: true });
+
+    // Mobile Navigation
+    const navToggle = document.getElementById('navToggle');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    function toggleNav() {
+        const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !isExpanded);
+        navToggle.classList.toggle('is-active');
+        mobileOverlay.classList.toggle('is-active');
+        document.body.style.overflow = isExpanded ? '' : 'hidden';
+    }
+
+    navToggle.addEventListener('click', toggleNav);
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', toggleNav);
+    });
+
+    // Scroll Reveal
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Modals
+    const placeholderModal = document.getElementById('placeholderModal');
+    const placeholderTitle = document.getElementById('placeholderTitle');
+    const demoModal = document.getElementById('demoModal');
+    const closeButtons = document.querySelectorAll('[data-close-modal]');
+
+    function openModal(modal) {
+        modal.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('is-active'));
+        document.body.style.overflow = '';
+    }
+
+    // Placeholder Triggers
+    document.querySelectorAll('.trigger-placeholder').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const feature = btn.getAttribute('data-feature');
+            placeholderTitle.textContent = feature;
+            openModal(placeholderModal);
+        });
+    });
+
+    // Demo Modals Triggers
+    document.querySelectorAll('.trigger-demo').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(demoModal);
+        });
+    });
+
+    // Close logic
+    closeButtons.forEach(btn => btn.addEventListener('click', closeModals));
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModals();
+        });
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModals();
+            if (mobileOverlay.classList.contains('is-active')) toggleNav();
+        }
+    });
+
+    // Cookie Banner
+    const cookieBanner = document.getElementById('cookieBanner');
+    const btnAccept = document.getElementById('cookieAccept');
+    const btnDecline = document.getElementById('cookieDecline');
+
+    if (!localStorage.getItem('cookie_consent')) {
+        setTimeout(() => {
+            cookieBanner.classList.add('is-visible');
+        }, 1000);
+    }
+
+    function handleCookieChoice(choice) {
+        localStorage.setItem('cookie_consent', choice);
+        cookieBanner.classList.remove('is-visible');
+    }
+
+    btnAccept.addEventListener('click', () => handleCookieChoice('accepted'));
+    btnDecline.addEventListener('click', () => handleCookieChoice('declined'));
+});
+</script>
+</body>
+</html>
